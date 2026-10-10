@@ -157,7 +157,9 @@ class FasterWhisperPipeline(Pipeline):
         # to fire all at once. Preserve generator laziness by routing through
         # get_iterator directly.
         if isinstance(inputs, types.GeneratorType):
-            num_workers = kwargs.pop("num_workers", None) or self._num_workers or 0
+            num_workers = kwargs.pop("num_workers", None)
+            if num_workers is None:
+                num_workers = self._num_workers or 0
             batch_size = kwargs.pop("batch_size", None) or self._batch_size or 1
             preprocess_params, forward_params, postprocess_params = self._sanitize_parameters(**kwargs)
             preprocess_params = {**self._preprocess_params, **preprocess_params}
